@@ -1,0 +1,18 @@
+server:
+  port: 9998
+spring:
+  jpa:
+    database: mysql
+  profiles:
+    active: dev
+logging:
+  file:
+    path: /spin/log
+    name: spin.log
+  logback:
+    rollingpolicy:
+      max-file-size: 200MB
+
+wechat:
+  appId: wx074d6441b1246d47
+  appSecret: f6c2c1151cdc769c5eb449e3c2114e0f

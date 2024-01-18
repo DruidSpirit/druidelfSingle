@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.245.118.239:63306/monthspin?useUnicode=true&characterEncoding=utf8
+    username: druiduser
+    password: Wy#8180369
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        order_inserts: true
+        jdbc:
+          batch_size: 500
+
+#web-secutity设置
+web-security-config:
+  login-submit-url: /user/login                #  登入表单提交接口
+
+ip-visit-setting:
+  #同一个IP,每visit-time秒访问visit-count次，被认为是恶意攻击，将其加入黑名单
+  visit-time: 1
+  visit-count: 10
+  #白名单设置(设置多个以逗号隔开)
+  white-ip-list: 127.1.1.1
+  #被加入黑名单后禁止访问的时间
+  not-allow-time: 1
+  #被加入黑名单后禁止访问的时间单位 SECONDS MINUTES HOURS DAYS
+  time-unit: MINUTES
+
+app:
+  jwtSecret: 123456
+  jwtExpirationInMin: 10

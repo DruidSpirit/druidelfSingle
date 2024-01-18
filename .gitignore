@@ -1,0 +1,4 @@
+# Project exclude paths
+/server/common/target/
+/server/monthspin/app/target/
+/server/monthspin/management/target/

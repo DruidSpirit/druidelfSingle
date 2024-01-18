@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:63306/lagou-study?useUnicode=true&characterEncoding=utf8
+    username: druiduser
+    password: Wy@8180369
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: mysql

@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://155.94.205.172:63306/gname?useUnicode=true&characterEncoding=utf8
+    username: druiduser
+    password: Wy#8180369
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: mysql

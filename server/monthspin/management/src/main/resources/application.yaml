@@ -1,0 +1,14 @@
+server:
+  port: 9999
+spring:
+  jpa:
+    database: mysql
+  profiles:
+    active: dev
+logging:
+  file:
+    path: /spin/log
+    name: spin.log
+  logback:
+    rollingpolicy:
+      max-file-size: 200MB

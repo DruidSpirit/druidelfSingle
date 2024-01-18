@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:63306/gname?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
+    username: druiduser
+    password: Wy@8180369
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    database: mysql
+    properties:
+      hibernate:
+        order_inserts: true
+        jdbc:
+          batch_size: 500
