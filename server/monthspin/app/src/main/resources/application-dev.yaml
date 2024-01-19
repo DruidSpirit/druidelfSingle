@@ -16,7 +16,8 @@ spring:
 
 #web-secutity设置
 web-security-config:
-  login-submit-url: /user/login                #  登入表单提交接口
+  login-submit-url: /user/login
+  register-submit-url: /user/register
 
 ip-visit-setting:
   #同一个IP,每visit-time秒访问visit-count次，被认为是恶意攻击，将其加入黑名单
@@ -30,5 +31,5 @@ ip-visit-setting:
   time-unit: MINUTES
 
 app:
-  jwtSecret: 123456
+  jwtSecret: mbl58I+/e4932xtBoe/c9z5HgNcne6sXzzmTrLmqBIdkfTqMEJS0LA/WrsZGcOlSFbQ1hMaR/mCN6oDqQvtdig==
   jwtExpirationInMin: 10

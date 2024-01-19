@@ -115,10 +115,10 @@ public class UtilForData {
     /**
      * 雪花算法生产id
      */
-    public static long getSnowId(){
+    public static String getSnowId(){
 
         // 以上初始化过程只需全局一次，且必"须在第2步之前设置。
-        return YitIdHelper.nextId();
+        return YitIdHelper.nextId()+"";
     }
 
 }

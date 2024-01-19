@@ -25,6 +25,8 @@ public enum ResponseDataEnums implements  ResponseInterface {
     RESPONSE_FAIL_NOT_LOGIN(3009,"用户未登入"),
     RESPONSE_FAIL_FREQUENTLY_VISIT(3010,"访问过于频繁，IP已被锁定"),
     RESPONSE_FAIL_NOT_BIND_WECHAT(3011,"微信用户未绑定"),
+    RESPONSE_FAIL_INVALID_TOKEN(3012,"无效的token"),
+    RESPONSE_FAIL_CHECK_TOKEN(3013,"token校验不通过"),
 
     RESPONSE_FAIL(5000,"数据响应失败"),
     ;

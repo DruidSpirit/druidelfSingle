@@ -8,6 +8,7 @@ import com.druidelf.response.LoginResponse;
 import com.druidelf.service.UserService;
 import druidelf.enums.ResponseDataEnums;
 import druidelf.exception.DruidElfHitException;
+import druidelf.model.ResponseData;
 import druidelf.security.JwtTokenProvider;
 import com.druidelf.service.wechat.WeChatService;
 import com.druidelf.service.wechat.vo.WeChatLoginRequest;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -37,18 +39,20 @@ public class UserServiceImpl implements UserService {
      * 登入
      */
     @Override
-    public LoginResponse toLogin(LoginRequest request) {
+    public ResponseData<LoginResponse> toLogin(LoginRequest request) {
 
-        Authentication authentication = null;
+        String username = null;
         // 执行用户认证(账号密码登入)
         if ( StrUtil.isNotBlank(request.getUsername()) && StrUtil.isNotBlank(request.getPassword()) ) {
-            authentication
+            Authentication authentication
                     = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
         }
 
 
@@ -62,23 +66,26 @@ public class UserServiceImpl implements UserService {
             //  查询微信是否绑定用户
             SpinUser user = spinUserRepository.findSpinUserByOpenId(weChatLoginResponse.getOpenid());
             if ( user == null ) {
-                throw new DruidElfHitException(ResponseDataEnums.RESPONSE_FAIL_NOT_BIND_WECHAT);
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setOpenId(weChatLoginResponse.getOpenid());
+                ResponseData<LoginResponse> failure = ResponseData.FAILURE(loginResponse);
+                failure.setStatusCode(ResponseDataEnums.RESPONSE_FAIL_NOT_BIND_WECHAT.getStatusCode());
+                failure.setMessage(ResponseDataEnums.RESPONSE_FAIL_NOT_BIND_WECHAT.getName());
+                return failure;
             }
-            authentication = authenticationManager.authenticate(
-                    new PreAuthenticatedAuthenticationToken(user.getUsername(), null)
-            );
+            username = user.getUsername();
         }
 
         // 如果认证成功，生成 JWT
-        if ( authentication == null ) {
+        if ( username == null ) {
             throw new DruidElfHitException("登入失败");
         }
 
-        String jwt = jwtTokenProvider.generateToken(authentication);
+        String jwt = jwtTokenProvider.generateToken(username);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setJwtCode(jwt);
-        return loginResponse;
+        return ResponseData.SUCCESS(loginResponse);
     }
 
     /**
@@ -88,7 +95,7 @@ public class UserServiceImpl implements UserService {
     public void register(RegisterRequest request) {
 
         if ( StrUtil.isBlank(request.getUsername()) ) {
-            request.setUsername(UUID.randomUUID().toString());
+            request.setUsername(UUID.randomUUID().getLeastSignificantBits()+"");
         }
 
         SpinUser spinUser = new SpinUser();
@@ -98,6 +105,7 @@ public class UserServiceImpl implements UserService {
                 .setPassword(UUID.randomUUID().toString())
                 .setPhone(request.getPhone())
                 .setRealName(request.getRealName())
+                .setOpenId(request.getOpenId())
                 .setStatus(false)
                 ;
         spinUserRepository.save(spinUser);

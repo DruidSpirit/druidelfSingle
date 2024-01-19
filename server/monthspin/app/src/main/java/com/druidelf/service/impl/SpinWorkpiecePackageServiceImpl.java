@@ -7,6 +7,7 @@ import druidelf.repository.spin.SpinWorkpiecePackageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,7 @@ public class SpinWorkpiecePackageServiceImpl implements SpinWorkpiecePackageServ
         SpinWorkpiecePackage spinWorkpiecePackage = new SpinWorkpiecePackage();
         Example<SpinWorkpiecePackage> of = Example.of(spinWorkpiecePackage);
 
-        return spinWorkpiecePackageRepository.findAll(of,request);
+        PageRequest pageRequest = PageRequest.of(request.getPage(),request.getSize());
+        return spinWorkpiecePackageRepository.findAll(of,pageRequest);
     }
 }

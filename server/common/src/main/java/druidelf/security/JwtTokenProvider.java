@@ -4,12 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 
+@Log4j2
 @Component
 public class JwtTokenProvider {
 
@@ -22,17 +22,16 @@ public class JwtTokenProvider {
     /**
      * 生成 JWT
      *
-     * @param authentication 认证信息
+     * @param username 用户名称
      * @return JWT 字符串
      */
-    public String generateToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    public String generateToken( String username ) {
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMin*60*1000);
+        Date expiryDate = new Date(now.getTime() + (long) jwtExpirationInMin *60*1000);
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS512)
@@ -63,14 +62,20 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                     .build()
-                    .parseClaimsJws(token);
-            return true;
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            // 检查JWT是否在有效期内
+            Date expirationDate = claims.getExpiration();
+            Date now = new Date();
+            return !expirationDate.before(now); // 如果过期时间在当前时间之前，则返回false
         } catch (Exception e) {
             return false;
         }
     }
+
 }
 

@@ -38,4 +38,4 @@ ip-visit-setting:
 
 app:
   jwtSecret: 123456
-  jwtExpirationInMin: 10
+  jwtExpirationInMin: 2

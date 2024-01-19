@@ -18,7 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Data
 @Configuration
@@ -27,10 +26,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @ConfigurationProperties("web-security-config")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /**
-     * 登入页面表单提交地址
-     */
     private String loginSubmitUrl;
+    private String registerSubmitUrl;
 
     private final MyAccessDeniedHandlerimplements myAccessDeniedHandlerimplements;
 
@@ -53,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         //  允许未认证访问的路径
-        String[] allowUrl = {loginSubmitUrl};
+        String[] allowUrl = {loginSubmitUrl,registerSubmitUrl};
         http
                 //关闭csrf
                 .csrf().disable()
@@ -69,8 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
         // 配置认证过滤器
         http
-                .addFilterBefore(ipVisitFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(ipVisitFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         // 配置异常处理器
         http
                 .exceptionHandling()
@@ -101,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtTokenFilter jwtTokenFilter() throws Exception {
-        return new JwtTokenFilter(jwtTokenProvider,authenticationManagerBean());
+        return new JwtTokenFilter(jwtTokenProvider,authenticationManagerBean(),loginSubmitUrl,registerSubmitUrl);
     }
 
 }

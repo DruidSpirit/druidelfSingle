@@ -53,7 +53,7 @@ public class SpinUser {
     private Boolean status;
 
     @Comment("微信用户唯一标识")
-    @Column(length = 60)
+    @Column(length = 60,unique = true)
     private String openId;
 
     @Comment("注册时间")

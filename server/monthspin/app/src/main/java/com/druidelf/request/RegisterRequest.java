@@ -1,7 +1,6 @@
 package com.druidelf.request;
 
 import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -19,4 +18,10 @@ public class RegisterRequest {
      * 手机号码
      */
     private String phone;
+
+    /**
+     * 微信登入openId
+     */
+    @NotBlank
+    private String openId;
 }

@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         );
 
         // 如果认证成功，生成 JWT
-        String jwt = jwtTokenProvider.generateToken(authentication);
+        String jwt = jwtTokenProvider.generateToken(null);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setJwtCode(jwt);

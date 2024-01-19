@@ -1,12 +1,9 @@
 package com.druidelf.request;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
+import lombok.Data;
 
-public class SpinWorkpiecePackageRequest extends PageRequest {
+@Data
+public class SpinWorkpiecePackageRequest extends PageBase {
 
-    public SpinWorkpiecePackageRequest(int page, int size) {
-        super(page, size, Sort.unsorted());
-    }
 }
